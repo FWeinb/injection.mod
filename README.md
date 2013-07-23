@@ -23,13 +23,8 @@ There are a number of annotation to Inject dependencies.
 
 
 # Annotaions:
-<style>
-.indent{
-  margin-left: 1em;
-}
-</style>
 <h2>{Injectable}</h2>
-<div class="indent">
+<div>
     <p>
         <span><b>Allowed Locations:</b> Type</span>
         <p>
@@ -38,7 +33,7 @@ There are a number of annotation to Inject dependencies.
     </p>
 </div>
 <h2>{Singelton}</h2>
-<div class="indent">
+<div>
     <p>
         <span><b>Allowed Locations:</b> Type</span>
         <p>
@@ -49,7 +44,7 @@ There are a number of annotation to Inject dependencies.
     </p>
 </div>
 <h2>{ProviderFor}</h2>
-<div class="indent">
+<div>
     <p>
         <span><b>Allowed Locations:</b> Type</span>
         <p>
@@ -65,7 +60,7 @@ There are a number of annotation to Inject dependencies.
     </p>
 </div>
 <h2>{Invoke}</h2>
-<div class="indent">
+<div>
     <p>
         <span><b>Allowed Locations:</b> Method</span>
         <p>
@@ -78,7 +73,7 @@ There are a number of annotation to Inject dependencies.
     </p>
 </div>
 <h2>{InjectProviderFor}</h2>
-<div class="indent">
+<div>
     <p>
         <span><b>Allowed Locations:</b> Field, Method</span>
         <p>
@@ -91,7 +86,7 @@ There are a number of annotation to Inject dependencies.
     </p>
 </div>
 <h2>{Inject}</h2>
-<div class="indent">
+<div>
     <p>
         <span><b>Allowed Locations:</b> Field, Method</span>
         <p>
