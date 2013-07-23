@@ -5,10 +5,12 @@ Injection - Dependency Injection Framework for BlitzMax based on Reflection
 
 ## Getting Started 
 To construct a new object using the TInjector:
+
 ```blitzmax
-Local injector:TInjector = TInjector.Create();
-Local obj:TMyTyp = TMyTyp(injector.get("TMyTyp"));
+Local injector:TInjector = TInjector.Create()
+Local obj:TMyTyp = TMyTyp(injector.get("TMyTyp"))
 ```
+
 In Order to tell the #TInjector that your Type TMyTyp is injectable you have to add the annotation {Injectable} to it</p>
 
 ```blitzmax
@@ -20,13 +22,13 @@ End Type
 There are a number of annotation to Inject dependencies.
 
 
-## Annotaions:
-  <style>
-      .indent{
-          margin-left: 1em;
-      }
-  </style>
-    <h2>{Injectable}</h2>
+# Annotaions:
+<style>
+.indent{
+  margin-left: 1em;
+}
+</style>
+<h2>{Injectable}</h2>
     <div class="indent">
         <p>
             <span><b>Allowed Locations:</b> Type</span>
@@ -42,7 +44,7 @@ There are a number of annotation to Inject dependencies.
             <p>
             The {Singelton} annotation ensures that this type is only instanciated once during runtime.
             </p>
-            <h2>Sample:</h2>
+            <h3>Sample:</h3>
             <b>Singelton Example:</b> <a href="../examples/SingeltonExample.bmx">Open</a>
         </p>
     </div>
@@ -58,8 +60,7 @@ There are a number of annotation to Inject dependencies.
             Every Provider must extend #TProvider and implement the get:object Method.
             Each time you request a instance of *TMyType* it will be created by the type annotated with {ProviderFor="TMyType"}
             </p>
-
-            <h2>Samples:</h2>
+            <h3>Samples:</h3>
             <b>Provider Example:</b> <a href="../examples/ProviderExample.bmx">Open</a><br>
         </p>
     </div>
@@ -71,7 +72,7 @@ There are a number of annotation to Inject dependencies.
             The {Invoke} annotation invokes a annotaded method with no arguments. It's just a convenience Method to {Inject}.
             Methods are called from Supertype -> first Extend -> second Extend.
             </p>
-            <h2>Sample:</h2>
+            <h3>Sample:</h3>
             <b>Method Invoke Example:</b> <a href="../examples/MethodInvokeExample.bmx">Open</a>
             <b>Method Invoke Order Example:</b> <a href="../examples/MethodInvokeOrderExample.bmx">Open</a>
         </p>
@@ -84,7 +85,7 @@ There are a number of annotation to Inject dependencies.
             The {InjectProviderFor} annotation is used to inject a provider for the specified Type
             <pre> bar:TProvider {InjectProviderFor="TBar"}</pre>
             </p>
-            <h2>Sample:</h2>
+            <h3>Sample:</h3>
             <b>Inject Provider Example:</b> <a href="../examples/InjectProviderExample.bmx">Open</a>
             <b>Method Provider Injection Example:</b> <a href="../examples/MethodProviderInjectionExample.bmx">Open</a>
         </p>
@@ -103,12 +104,12 @@ There are a number of annotation to Inject dependencies.
                 The {Inject} annotation can also be used to inject a extended Type to it's supertype using this syntax:
                 <pre>bar:TSuperType {Inject="TExtendSuperType"}</pre>
             </p>
-
-            <h2>Samples:</h2>
-
+            
+            <h3>Samples:</h3>
+            
             <b>Field Injection Example:</b> <a href="../examples/FieldInjectionExample.bmx">Open</a><br>
             <b>Method Injection Example:</b> <a href="../examples/MethodInjectionExample.bmx">Open</a>
-
+            
             <b>Advanced Field Injection Example:</b> <a href="../examples/AdvancedFieldInjectionExample.bmx">Open</a><br>
             <b>Advanced Method Injection Example:</b> <a href="../examples/AdvancedMethodInjectionExample.bmx">Open</a>
         </p>
