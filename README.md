@@ -21,7 +21,6 @@ End Type
 
 There are a number of annotation to Inject dependencies.
 
-
 # Annotaions:
 <h2>{Injectable}</h2>
 <div>
@@ -68,7 +67,7 @@ There are a number of annotation to Inject dependencies.
         Methods are called from Supertype -> first Extend -> second Extend.
         </p>
         <h3>Sample:</h3>
-        <b>Method Invoke Example:</b> <a href="../examples/MethodInvokeExample.bmx">Open</a>
+        <b>Method Invoke Example:</b> <a href="../examples/MethodInvokeExample.bmx">Open</a><br>
         <b>Method Invoke Order Example:</b> <a href="../examples/MethodInvokeOrderExample.bmx">Open</a>
     </p>
 </div>
@@ -80,8 +79,8 @@ There are a number of annotation to Inject dependencies.
         The {InjectProviderFor} annotation is used to inject a provider for the specified Type
         <pre> bar:TProvider {InjectProviderFor="TBar"}</pre>
         </p>
-        <h3>Sample:</h3>
-        <b>Inject Provider Example:</b> <a href="../examples/InjectProviderExample.bmx">Open</a>
+        <h6>Sample:</h6>
+        <b>Inject Provider Example:</b> <a href="../examples/InjectProviderExample.bmx">Open</a><br>
         <b>Method Provider Injection Example:</b> <a href="../examples/MethodProviderInjectionExample.bmx">Open</a>
     </p>
 </div>
@@ -104,7 +103,7 @@ There are a number of annotation to Inject dependencies.
         
         <b>Field Injection Example:</b> <a href="../examples/FieldInjectionExample.bmx">Open</a><br>
         <b>Method Injection Example:</b> <a href="../examples/MethodInjectionExample.bmx">Open</a>
-        
+        <br>
         <b>Advanced Field Injection Example:</b> <a href="../examples/AdvancedFieldInjectionExample.bmx">Open</a><br>
         <b>Advanced Method Injection Example:</b> <a href="../examples/AdvancedMethodInjectionExample.bmx">Open</a>
     </p>
