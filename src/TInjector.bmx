@@ -4,15 +4,15 @@ TInjector.tInjectorType = TTypeId.ForName("TInjector");
 
 Rem
   bbdoc: Creates Objects and its dependencies
-  about: Provides you with the ability to construct arbitary Types including its dependencies.
+  about: Provides you with the ability to construct arbitary types including its dependencies.
 EndRem
-Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
+Type TInjector {Injectable="*"} ' TInjector is injectable, for all namespaces! Soo meta
   Global tInjectorType:TTypeId;
   Global tProviderType:TTypeId = TTypeId.ForName("TProvider");
 
   Rem
-    bbdoc:  Indicates how the object graph is created.
-    about:  If True the complete object graph is created, otherwise the object graph is build lazy.
+    bbdoc: Indicates how the object graph is created.
+    about: If false the complete object graph is created, otherwise the object graph is build lazy.
   EndRem
   Global lazyLoade:Byte = True;
 
@@ -27,16 +27,27 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
     about: Creates a #TInjector and initialize it.
   EndRem
   Function Create:TInjector()
+	Return TInjector.CreateWithNamespace("*");
+  End Function
+
+  Function CreateWithNamespace:TInjector(inNamespace:String)
     Local injector:TInjector = New TInjector;
-    Local providerTypeList:TList = New TList'TTypeId
 
     ' Iterate over all types
     For Local typeTypeId:TTypeId = EachIn TTypeId.EnumTypes();
-      Local typeName:String       = typeTypeId.name();
       Local isProvider:String     = typeTypeId.metaData("ProviderFor");
-      Local isInjectable:Byte     = typeTypeId.metaData("Injectable").length  <> 0 Or isProvider.length <> 0;
+      Local namespace:String      = typeTypeId.metaData("Injectable");
+      Local isInjectable:Byte     = namespace.length <> 0 Or isProvider.length <> 0;
+
 
       If (isInjectable) Then
+      	Local typeName:String       = typeTypeId.name();
+
+	 	If (inNamespace <> "*" And namespace <> "*" And inNamespace <> namespace)
+	      DebugLog "Skip *"+typeName+"* not in namespace " + inNamespace;
+	      Continue;
+	    End If
+
         DebugLog "Add *"+typeName+"* to typeCache";
         injector.typeCache.insert typeName, typeTypeId;
 
@@ -46,10 +57,11 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
 
           ' Add provided type typeCache (A type for which there is a provider dosn't need {Injectable})
           injector.typeCache.insert isProvider, TTypeId.ForName(isProvider);
-          providerTypeList.addLast typeTypeId;
-        Else
-        End If
 
+          Local providedType:String = typeTypeId.metaData("ProviderFor");
+          DebugLog "Create a TProvider for *"+providedType+"* of type *"+typeName+"*"
+          injector.providerCache.insert injector._typeIdForName(providedType), injector._getDynamicProvider(typeTypeId,  Null).get(); '.get() user TProviderImpl from TDynamicProvider
+        End If
       End If
     Next
 
@@ -57,38 +69,37 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
       DebugLog "Create object graph.."
 
       For Local typeIdToCreate:TTypeId = EachIn injector.typeCache.values();
-        injector._getDynamicProvider(typeIdToCreate, New TList);
+		Try
+        	injector._getDynamicProvider(typeIdToCreate,  Null);
+		Catch e:Object
+		End Try
       Next
 
       DebugLog "..done creating object Graph"
     End If
 
-    ' Add user supplyed Provider
-    For Local providerTypeId:TTypeId = EachIn providerTypeList
-        Local providedType:String = providerTypeId.metaData("ProviderFor");
-        DebugLog "Create a TProvider for *"+providedType+"* of type *"+providerTypeId.name()+"*"
-        injector.providerCache.insert injector._typeIdForName(providedType), injector._getDynamicProvider(providerTypeId, New TList).get(); '.get() user TProviderImpl from TDynamicProvider
-    Next
-
     Return injector;
   End Function
+
   Rem
     bbdoc: Request an instance of type typeName
     about: This function will try to provide an instance of type typeName.
-    returns: An instance of Type typeName with all its dependencies injected.
+    returns: An instance of type typeName with all its dependencies injected.
   EndRem
   Method get:Object(typeName:String)
     Return _getByTypeId(_typeIdForName(typeName));
   End Method
+
   Rem
     bbdoc: Request a #TProvider that provides instances of type typeName
   EndRem
   Method getProvider:TProvider(typeName:String)
-    Return _getDynamicProvider(_typeIdForName(typeName), New TList);
+    Return _getDynamicProvider(_typeIdForName(typeName), Null);
   End Method
 
+
   Method _getByTypeId:Object(typeTypeId:TTypeId)
-      Local instance:Object = _getDynamicProvider(typeTypeId, New TList).get();
+      Local instance:Object = _getDynamicProvider(typeTypeId, Null).get();
 
       Assert instance, "Won't return null for *" + typeTypeId.name() + "*";
 
@@ -103,6 +114,7 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
         provider = TProvider(Self.providerCache.valueForKey(typeTypeId));
     Else
         DebugLog "Create Provider for *"+typeTypeId.name()+"*"
+        If depChain = Null Then depChain = New TList
         provider = _createDynamicProviderFor(typeTypeId, depChain);
     End If
 
@@ -111,12 +123,18 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
     Return provider
   End Method
 
-  Method _createDynamicProviderFor:TProvider(typeTypeId:TTypeId, depsChain:TList) ' depsChain<TTypeId>
+  Method _createDynamicProviderFor:TProvider(typeTypeId:TTypeId, depsChain:TList) ' depsChain<String>
+    Local typeTypeIdName:String = typeTypeId.name();
     ' Prevent Circular dependencies
-    Assert depsChain.contains(typeTypeId) = False, "Circular dependency: "+_showDeps(depsChain);
+    Assert depsChain.contains(typeTypeIdName) = 0, "Circular dependency: "+_showDeps(depsChain);
+
 
     ' Add typeTypeId to dependency chain
-    depsChain.addLast typeTypeId;
+    depsChain.addLast typeTypeIdName;
+
+    If (Not depsChain.IsEmpty()) Then
+      DebugLog depsChain.contains(typeTypeIdName)
+    End If
 
     Local injectionList:TList = New TList ' TInjection
 
@@ -167,7 +185,6 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
     DebugLog "..done field injections~nDebugLog:Add method injections.."
 
     For Local oMethod:TMethod = EachIn typeTypeId.enumMethods();
-        Local methodReturnTypeId:TTypeId      = oMethod.typeId();
         Local injectAnnotation:String         = oMethod.metaData("Inject");
         Local injectProviderFor:String        = oMethod.metaData("InjectProviderFor");
         Local invokeAnnotation:String         = oMethod.metaData("Invoke");
@@ -183,7 +200,7 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
         If (injectAnnotation <> "") Then
           DebugLog "..with {Inject}"
 
-          ' Advanced Method Injection {Inject="TType1,TType2,TType3"}
+          ' Advanced method injection {Inject="TType1,TType2,TType3"}
           If (injectAnnotation <> "1")
             DebugLog "..value: *" + injectAnnotation + "*"
 
@@ -192,7 +209,7 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
             Local annotatedTypesLength:Int = annotatedTypes.length - 1;
             For Local i:Int=0 To annotatedTypesLength;
               Local argTypeId:TTypeId = injectedTypeIds[i];
-              Local typeString:String = annotatedTypes[i].trim();
+              Local typeString:String = annotatedTypes[i].Trim();
               Local typeId:TTypeId    = _typeIdForName(typeString);
 
               ' Must be the same or extend argTypeIds
@@ -202,12 +219,11 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
               injectedTypeProviders[i] = _getDynamicProvider(typeId, depsChain.copy());
             Next
             ' Add provider for remaining arguments.
-            For Local i:int=annotatedTypesLength+1 to injectedTypeIdsLength - 1
-              DebugLog "OTHER: "+injectedTypeIds[i].name()
+            For Local i:Int=annotatedTypesLength+1 To injectedTypeIdsLength - 1
               injectedTypeProviders[i] = _getDynamicProvider(injectedTypeIds[i], depsChain.copy());
             Next
           Else
-            ' Simple Method Injection
+            ' Simple method injection
             For Local i:Int=0 To injectedTypeIdsLength - 1
               Local argType:TTypeId = injectedTypeIds[i];
 
@@ -219,24 +235,24 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
           injection = TMethodInjection.Create(oMethod, injectedTypeProviders)
         End If
 
-        if (injectProviderFor <> "") Then
+        If (injectProviderFor <> "") Then
           DebugLog "..with {InjectProviderFor}"
 
-          ' Advanced Provider Injection {injectProviderFor="TType1,TType2,TType3"}
+          ' Advanced provider injection {injectProviderFor="TType1,TType2,TType3"}
           If (injectProviderFor <> "1")
             DebugLog "..value: *" + injectProviderFor + "*"
 
             Local annotatedTypes:String[] = _getAnnotatedTypes(injectProviderFor);
 
-            Assert injectedTypeIds.length = annotatedTypes.length, "Arguments count must match provider count"
+            Assert injectedTypeIds.length = annotatedTypes.length, "In Type "+typeTypeId.name()+", method "+oMethod.name()+" arguments count must match provider count"
 
             Local annotatedTypesLength:Int = annotatedTypes.length - 1;
             For Local i:Int=0 To annotatedTypesLength;
               Local argTypeId:TTypeId = injectedTypeIds[i];
-              Local typeString:String = annotatedTypes[i].trim();
+              Local typeString:String = annotatedTypes[i].Trim();
 
               ' argTypeId must be a TProvider (or extend it)
-              Assert argTypeId.extendsType(tProviderType) Or argTypeId.Compare(tProviderType) = 0, "Argument must be a TProvider (or extend it)"
+              Assert argTypeId.extendsType(tProviderType) Or argTypeId.Compare(tProviderType) = 0, "In Type "+typeTypeId.name()+", method "+oMethod.name()+" argument must be a TProvider (Or extend it)"
 
               injectedTypeProviders[i] = _getDynamicProvider(_typeIdForName(typeString), depsChain.copy());
             Next
@@ -244,14 +260,14 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
             injection = TMethodProviderInjection.Create(oMethod, injectedTypeProviders)
 
           Else
-            Throw "You must specifiy for which Types you want to have proivders injected"
+            Throw "You must specifiy for which types you want to have proivders injected"
           End If
         End If
 
         If (invokeAnnotation <> "") Then
           Assert injectedTypeIds.length = 0, "Can't invoke a method with Arguments"
           DebugLog "..with {Invoke}"
-          'Dummy Injection to only invoke the method
+          'Dummy injection to only invoke the method
           injection = TMethodInjection.Create(oMethod, Null);
         End If
 
@@ -259,9 +275,9 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
         injectionList.addLast injection;
     Next
 
-    ' Create and cache Provider
+    ' Create and cache provider
     Local newProvider:TProvider;
-    Local dyProvider:TDynamicProvider = TDynamicProvider.Create(typeTypeId, injectionList);
+    Local dyProvider:TDynamicProvider = TDynamicProvider.Create(typeTypeId, TInjection[](injectionList.ToArray()));
 
     ' Type is annotated with {Singelton}
     If (typeTypeId.metaData("Singelton"))
@@ -281,13 +297,13 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
     Return typeId;
   End Method
 
-  Method _showDeps:String(depsChain:TList)' depsChain:TList<TTypeId>
+  Method _showDeps:String(depsChain:TList)'<String>
     Local deps:String = "";
-    For Local typeId:TTypeId = EachIn depsChain
-      deps = deps + " -> " + typeId.name()
+    For Local typeId:String = EachIn depsChain
+      deps = deps + " -> " + typeId
     Next
     deps = deps[4..]; ' Remove first ->
-    Return deps + " -> *" + TTypeId(depsChain.first()).name() + "*";
+    Return deps + " -> *" + String(depsChain.first()) + "*";
   End Method
 
   Method _getAnnotatedTypes:String[](value:String)
@@ -297,6 +313,6 @@ Type TInjector {Injectable} ' TInjector is Inejctable! Soo meta
     Else
       annotatedTypes = [value];
     End If
-    return annotatedTypes;
+    Return annotatedTypes;
   End Method
 End Type

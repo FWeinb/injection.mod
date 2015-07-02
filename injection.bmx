@@ -33,14 +33,15 @@ ModuleInfo "Author: Fabrice Weinberg"
 ModuleInfo "Credit: Inspired by Google Guice for Java"
 ModuleInfo "Copyright: (c) 2013 Fabrice Weinberg"
 
+ModuleInfo "History: 1.0 Added the abilty to specify namespaces"
+ModuleInfo "Histroy:     Performance improvments"
 ModuleInfo "History: 0.2 Added the {InjectProviderFor} annotation to methods"
 ModuleInfo "History: 0.1 Initial Release"
-ModuleInfo "Histroy: Test using BaH.MaxUnit"
+ModuleInfo "Histroy:     Test using BaH.MaxUnit"
 
 Import BRL.LinkedList
 Import BRL.Map
 Import BRL.StandardIO
-Import BRL.System
 Import BRL.Reflection
 
 Include "src/TInjection.bmx"

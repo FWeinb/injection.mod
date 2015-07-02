@@ -1,27 +1,26 @@
 SuperStrict
 
-
+Framework BRL.System
 Import fab.Injection
 
-Type TBarAbstract abstract
+Type TBarAbstract Abstract
   Field abstractName:String = "TBarAbstract"
 End Type
 
-Type TBarImpl extends TBarAbstract {Injectable} ' Make Injectable
+Type TBarImpl Extends TBarAbstract {Injectable} ' Make Injectable
   Field implName:String = "TBar"
 End Type
 
 
 Type TFoo {Injectable} ' Make Injectable
-  Method init(bar:TBarAbstract, bar1:TBarAbstract) {Inject="TBarImpl, TBarImpl"}
+  Method init(bar:TBarAbstract, bar1:TInjector) {Inject="TBarImpl, TBarImpl"}
     Print bar.abstractName; ' TBarAbstract
-    Print TBarImpl(bar).implName ' TBarImpl
-  End MEthod
+  End Method
 End Type
 
 
 ' Create a TInjector
-Local injector:TInjector = TInjector.create();
+Local injector:TInjector = TInjector.Create();
 ' Request a TFoo instance;
 Local foo:TFoo = TFoo(injector.get("TFoo"));
 

@@ -22,7 +22,7 @@ Type TProviderInjection Extends TTest
     Local simpleObj:TProviderSimpleObj = TProviderSimpleObj(providerSimple.simpleObjProvider.get());
     Assert simpleObj, "TProvider can't provide simpleObj"
 
-    AssertEqualsI(simpleObj.value, 50, "Value is Wrong");
+    AssertEqualsI(50, simpleObj.value, "Value is Wrong");
 
   End Method
 
@@ -33,7 +33,7 @@ Type TProviderInjection Extends TTest
 
     Assert obj, "Injector can't inject TOwnObj"
 
-    AssertEqualsI(obj.value, 50, "Value is Wrong");
+    AssertEqualsI(50, obj.value, "Value is Wrong");
 
     AssertEquals(obj, obj1, "Not a Singelton");
 
@@ -42,14 +42,14 @@ Type TProviderInjection Extends TTest
   Method methodProviderInjection() {test}
     Local obj:TMethodProviderInjection = TMethodProviderInjection(injector.get("TMethodProviderInjection"));
     Assert obj, "Injector can't inject TMethodProviderInjection"
-    AssertEquals(obj.test, "Test", "Value is wrong");
+    AssertEquals("Test", obj.test, "Value is wrong");
   End Method
 
   Method methodProivderInjectionFail() {test}
     Try
       Local obj:TMethodProviderInjectionFail = TMethodProviderInjectionFail(injector.get("TMethodProviderInjectionFail"));
     Catch error:Object
-      assertEquals(error.toString(), "Argument must be a TProvider (or extend it)", "Wrong Error Message")
+      assertEquals("In Type TMethodProviderInjectionFail, method init argument must be a TProvider (Or extend it)", error.toString(), "Wrong Error Message")
     EndTry
   End Method
 
@@ -98,6 +98,7 @@ Type TMethodProviderInjection {Injectable}
     test = TMethodProviderInjectionObj(objProvider.get()).value;
   End Method
 End Type
+
 'Fail
 Type TMethodProviderInjectionFail {Injectable}
   Field test:String;

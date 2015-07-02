@@ -41,9 +41,9 @@ End Type
 
 
 Type TMethodInjection Extends TInjection
-  Field _method      : TMethod
-  Field _argCount    : Int
-  Field _argProvider : TProvider[]
+  Field _method          : TMethod
+  Field _argCount        : Int
+  Field _argProvider     : TProvider[]
 
   Function Create:TMethodInjection(_method:TMethod, _argProvider:TProvider[])
     Local tmi:TMethodInjection = New TMethodInjection
@@ -54,13 +54,13 @@ Type TMethodInjection Extends TInjection
   End Function
 
   Method inject(obj:Object)
-    Local objArgs:Object[] = null;
-    if (_argProvider <> null)
+    Local objArgs:Object[] = Null;
+    If (_argProvider <> Null)
       objArgs = New Object[_argProvider.length];
       For Local i:Int=0 To _argCount;
         objArgs[i] = _argProvider[i].get();
       Next
-    End if
+    End If
     _method.invoke obj, objArgs;
   End Method
 

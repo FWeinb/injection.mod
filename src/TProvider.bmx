@@ -1,25 +1,25 @@
 
 Rem
   bbdoc:   Abstract TProvider
-  about:   All providers are based on this Provider.
+  about:   All providers are based on this provider.
 EndRem
-Type TProvider abstract
-  Method get:Object() abstract
+Type TProvider Abstract
+  Method get:Object() Abstract
 End Type
 
 Rem
   bbdoc:  Dynamic Provider
-  about:  Internally used Provider to resolve dependencies more efficient.
+  about:  Internally used provider to resolve dependencies more efficient.
 EndRem
-Type TDynamicProvider extends TProvider
+Type TDynamicProvider Extends TProvider
   Field providedType:TTypeId
-  Field injections:TList ' TInjection
+  Field injections:TInjection[] ' TInjection
 
-  Function Create:TDynamicProvider(providedType:TTypeId, injections:TList)
-    Local dp:TDynamicProvider = new TDynamicProvider
+  Function Create:TDynamicProvider(providedType:TTypeId, injections:TInjection[])
+    Local dp:TDynamicProvider = New TDynamicProvider
     dp.providedType = providedType;
     dp.injections   = injections;
-    return dp;
+    Return dp;
   End Function
 
   Method get:Object()
@@ -27,24 +27,24 @@ Type TDynamicProvider extends TProvider
       For Local injection:TInjection = EachIn injections
           injection.inject(obj);
       Next
-      return obj;
+      Return obj;
   End Method
 End Type
 
 Rem
   bbdoc: Singelton Provider
-  about:  Internally used Provider to provide Singeltons
+  about: Internally used provider to provide singeltons
 EndRem
-Type TSingeltonProvider extends TProvider
+Type TSingeltonProvider Extends TProvider
   Field obj:Object
 
   Function Create:TSingeltonProvider(obj:Object)
-    Local sp:TSingeltonProvider = new TSingeltonProvider
+    Local sp:TSingeltonProvider = New TSingeltonProvider
           sp.obj = obj;
-    return sp;
+    Return sp;
   End Function
 
   Method get:Object()
-    return obj;
+    Return obj;
   End Method
 End Type

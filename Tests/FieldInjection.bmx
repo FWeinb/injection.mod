@@ -4,20 +4,20 @@ Import fab.injection
 Import BaH.MaxUnit
 
 
-Type TFieldInjectionTest extends TTest
+Type TFieldInjectionTest Extends TTest
   Field injector:TInjector;
 
   Method setup() {before}
-    injector:TInjector  = TInjector.Create();
+   	injector:TInjector  = TInjector.Create();
   End Method
 
   Method SimpleFieldInjection() {test}
     Local foo:TFoo = TFoo(injector.get("TFoo"));
-    If (foo = null)
+    If (foo = Null)
       fail("Injector can't provied TFoo");
     End If
 
-    if (foo.bar = null)
+    If (foo.bar = Null)
       fail("Injector didn't inject the dependencice of TFoo in foo");
     End If
 
@@ -28,15 +28,15 @@ Type TFieldInjectionTest extends TTest
   Method AdvancedFieldInjectionTest() {test}
     Local testObj:TToInject = TToInject(injector.get("TToInject"));
 
-    If (testObj = null)
+    If (testObj = Null)
       fail("Injector can't provide testObj from type TToInject")
-      return
+      Return
     End If
 
-    if (testObj.obj = null)
+    If (testObj.obj = Null)
       fail("Injector can't didn't do advanced field Injection")
-      return
-    End if
+      Return
+    End If
 
     assertTrue(testObj.obj.abstractObj = "abst", "Value of abstractObj is wrong");
 
@@ -49,22 +49,22 @@ Type TFieldInjectionTest extends TTest
     Local injector:TInjector  = TInjector.Create();
     Local testObj:TProviderInject = TProviderInject(injector.get("TProviderInject"));
 
-    If (testObj = null)
+    If (testObj = Null)
       fail("Injector can't provied TProvider for TObject");
-      return
+      Return
     End If
 
-    If (testObj.tObjectProvider = null)
+    If (testObj.tObjectProvider = Null)
       fail("Injector can't inject a Provider");
-      return
+      Return
     End If
 
     Local newObj:TObject    = TObject(testObj.tObjectProvider.get());
     Local newObj1:TObject   = TObject(testObj.tObjectProvider.get());
 
-    If (newObj.value = null)
+    If (newObj.value = Null)
       fail("Provider dosn't build the whole object");
-      return
+      Return
     End If
 
     assertEqualsI(newObj.value, 50, "Value mismatch");
@@ -92,12 +92,12 @@ Type TFoo {Injectable}
 End Type
 
 ' Advanced Field Injection
-Type TAbstractType abstract
+Type TAbstractType Abstract
   Field abstractObj:String = "abst"
 End Type
 
 
-Type TImplType extends TAbstractType {Injectable} 
+Type TImplType Extends TAbstractType {Injectable}
   Field  implObj:String = "impl"
 End Type
 
@@ -109,7 +109,7 @@ End Type
 
 ' Provider Field Injection
 Type TObject {Injectable}
-  Field value:int = 50;
+  Field value:Int = 50;
 End Type
 
 
