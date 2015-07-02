@@ -126,15 +126,10 @@ Type TInjector {Injectable="*"} ' TInjector is injectable, for all namespaces! S
   Method _createDynamicProviderFor:TProvider(typeTypeId:TTypeId, depsChain:TList) ' depsChain<String>
     Local typeTypeIdName:String = typeTypeId.name();
     ' Prevent Circular dependencies
-    Assert depsChain.contains(typeTypeIdName) = 0, "Circular dependency: "+_showDeps(depsChain);
-
+    Assert depsChain.contains(typeTypeIdName) = False, "Circular dependency: "+_showDeps(depsChain);
 
     ' Add typeTypeId to dependency chain
     depsChain.addLast typeTypeIdName;
-
-    If (Not depsChain.IsEmpty()) Then
-      DebugLog depsChain.contains(typeTypeIdName)
-    End If
 
     Local injectionList:TList = New TList ' TInjection
 
