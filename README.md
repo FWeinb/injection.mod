@@ -44,7 +44,7 @@ There are a number of annotation to inject dependencies.
         The {Singelton} annotation ensures that this type is only instanciated once during runtime.
         </p>
         <h3>Sample:</h3>
-        <b>Singelton example:</b> <a href="/examples/Singeltonexample.bmx">Open</a>
+        <b>Singelton example:</b> <a href="/examples/SingeltonExample.bmx">Open</a>
     </p>
 </div>
 <h2>{ProviderFor}</h2>
@@ -60,7 +60,7 @@ There are a number of annotation to inject dependencies.
         Each time you request a instance of *TMyType* it will be created by the type annotated with {ProviderFor="TMyType"}
         </p>
         <h3>Samples:</h3>
-        <b>Provider example:</b> <a href="/examples/Providerexample.bmx">Open</a><br>
+        <b>Provider example:</b> <a href="/examples/ProviderExample.bmx">Open</a><br>
     </p>
 </div>
 <h2>{Invoke}</h2>
@@ -72,8 +72,8 @@ There are a number of annotation to inject dependencies.
         Methods are called from supertype -> first extend -> second extend.
         </p>
         <h3>Sample:</h3>
-        <b>Method invoke example:</b> <a href="/examples/MethodInvokeexample.bmx">Open</a><br>
-        <b>Method invoke order example:</b> <a href="/examples/MethodInvokeOrderexample.bmx">Open</a>
+        <b>Method invoke example:</b> <a href="/examples/MethodInvokeExample.bmx">Open</a><br>
+        <b>Method invoke order example:</b> <a href="/examples/MethodInvokeOrderExample.bmx">Open</a>
     </p>
 </div>
 <h2>{InjectProviderFor}</h2>
@@ -85,8 +85,8 @@ There are a number of annotation to inject dependencies.
         <pre> bar:TProvider {InjectProviderFor="TBar"}</pre>
         </p>
         <h6>Sample:</h6>
-        <b>Inject provider example:</b> <a href="/examples/InjectProviderexample.bmx">Open</a><br>
-        <b>Method provider injection example:</b> <a href="/examples/MethodProviderInjectionexample.bmx">Open</a>
+        <b>Inject provider example:</b> <a href="/examples/InjectProviderExample.bmx">Open</a><br>
+        <b>Method provider injection example:</b> <a href="/examples/MethodProviderInjectionExample.bmx">Open</a>
     </p>
 </div>
 <h2>{Inject}</h2>
@@ -106,10 +106,10 @@ There are a number of annotation to inject dependencies.
         
         <h3>Samples:</h3>
         
-        <b>Field injection example:</b> <a href="/examples/FieldInjectionexample.bmx">Open</a><br>
-        <b>Method injection example:</b> <a href="/examples/MethodInjectionexample.bmx">Open</a>
+        <b>Field injection example:</b> <a href="/examples/FieldInjectionExample.bmx">Open</a><br>
+        <b>Method injection example:</b> <a href="/examples/MethodInjectionExample.bmx">Open</a>
         <br>
-        <b>Advanced field injection example:</b> <a href="/examples/AdvancedFieldInjectionexample.bmx">Open</a><br>
-        <b>Advanced method injection example:</b> <a href="/examples/AdvancedMethodInjectionexample.bmx">Open</a>
+        <b>Advanced field injection example:</b> <a href="/examples/AdvancedFieldInjectionExample.bmx">Open</a><br>
+        <b>Advanced method injection example:</b> <a href="/examples/AdvancedMethodInjectionExample.bmx">Open</a>
     </p>
 </div>
