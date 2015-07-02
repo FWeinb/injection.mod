@@ -29,7 +29,7 @@ There are a number of annotation to inject dependencies.
         <span><b>Allowed Locations:</b> Type</span>
         <p>
             Indicates if this type can be injected by a #TInjector<br />
-            You can specify a namespace using <code>{Injectable="Namespace"}<code>
+            You can specify a namespace using <code>{Injectable="Namespace"}</code>
 
         </p>
         <h3>Sample:</h3>
