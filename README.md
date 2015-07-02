@@ -33,7 +33,7 @@ There are a number of annotation to inject dependencies.
 
         </p>
         <h3>Sample:</h3>
-        <b>Namespace example:</b> <a href="/examples/Namespaceexample.bmx">Open</a>
+        <b>Namespace example:</b> <a href="/examples/NamespaceExample.bmx">Open</a>
     </p>
 </div>
 <h2>{Singelton}</h2>
